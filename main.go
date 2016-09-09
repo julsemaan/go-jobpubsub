@@ -57,13 +57,10 @@ func main() {
 		go func(i int) {
 			started <- i
 			fmt.Printf("Starting routine %d \n", i)
-			val := compute("bouzin")
+			val := compute(fmt.Sprintf("bouzin"))
 			fmt.Printf("goroutine %d says '%s' \n", i, val)
 			w.Done()
 		}(i)
-	}
-	for len(started) != 5 {
-		time.Sleep(10 * time.Millisecond)
 	}
 	w.Wait()
 }
