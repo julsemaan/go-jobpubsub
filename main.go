@@ -30,4 +30,8 @@ func main() {
 		}(i)
 	}
 	w.Wait()
+
+	arg := fmt.Sprintf("bouzin")
+	val := jps.Compute(fmt.Sprintf(arg), func() interface{} { return complexStuff(arg) })
+	fmt.Printf("main goroutine says '%s' \n", val)
 }
