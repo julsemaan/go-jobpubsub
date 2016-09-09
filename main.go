@@ -13,11 +13,13 @@ var pubSubMap = make(map[string]*pubsub.PubSub)
 func compute(s string) string {
 
 	c := getSubChan(s)
+	// There is already someone taking care of it
 	if c != nil {
 		val := <-c
 		return val.(string)
 	}
 
+	// No one taking care of it so we compute it and publish it to any connected peer
 	result := complexStuff(s)
 	lock.Lock()
 	pubSubMap[s].Pub(result, "result")
