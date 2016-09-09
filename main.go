@@ -15,8 +15,13 @@ func compute(s string) string {
 	c := getSubChan(s)
 	// There is already someone taking care of it
 	if c != nil {
-		val := <-c
-		return val.(string)
+		select {
+		case val := <-c:
+			return val.(string)
+		case <-time.After(time.Second * 2):
+			fmt.Println("Timeout reading from pubsub channel...")
+			return complexStuff(s)
+		}
 	}
 
 	// No one taking care of it so we compute it and publish it to any connected peer
@@ -50,7 +55,7 @@ func complexStuff(s string) string {
 }
 
 func main() {
-	MAX := 20
+	MAX := 5
 	var w sync.WaitGroup
 	w.Add(MAX)
 	//ps := pubsub.New(1)
