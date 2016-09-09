@@ -48,7 +48,7 @@ func complexStuff(s string) string {
 }
 
 func main() {
-	MAX := 5
+	MAX := 20
 	var w sync.WaitGroup
 	w.Add(MAX)
 	//ps := pubsub.New(1)
