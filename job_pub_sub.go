@@ -36,9 +36,9 @@ func (self *JobPubSub) Compute(id string, job func() interface{}) interface{} {
 	// No one taking care of it so we compute it and publish it to any connected peer
 	result := job()
 	self.lock.Lock()
+	defer self.lock.Unlock()
 	self.pubSubMap[id].Pub(result, "result")
 	self.pubSubMap[id] = nil
-	self.lock.Unlock()
 	return result
 }
 
