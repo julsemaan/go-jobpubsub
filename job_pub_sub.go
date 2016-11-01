@@ -1,4 +1,4 @@
-package main
+package jobpubsub
 
 import (
 	"fmt"
