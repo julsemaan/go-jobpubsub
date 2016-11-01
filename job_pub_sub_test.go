@@ -25,7 +25,7 @@ func TestJobPubSub(t *testing.T) {
 			arg := "bouzin"
 			val := jps.Compute("complex-"+arg, func() interface{} {
 				m.Lock()
-				count = 1
+				count++
 				//fmt.Printf("Count is %d \n", count)
 				m.Unlock()
 				return complexStuff(arg)
