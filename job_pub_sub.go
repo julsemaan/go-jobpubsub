@@ -49,9 +49,9 @@ func (self *JobPubSub) getSubChan(id string) chan interface{} {
 	var c chan interface{}
 	if self.pubSubMap[id] != nil {
 		c = self.pubSubMap[id].Sub("result")
-		fmt.Printf("Subscribing to existing computing for %s \n", id)
+		//fmt.Printf("Subscribing to existing computing for %s \n", id)
 	} else {
-		fmt.Printf("Creating new pubsub for %s \n", id)
+		//fmt.Printf("Creating new pubsub for %s \n", id)
 		ps := pubsub.New(1)
 		self.pubSubMap[id] = ps
 	}
