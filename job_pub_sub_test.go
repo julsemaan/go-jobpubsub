@@ -17,6 +17,7 @@ func TestJobPubSub(t *testing.T) {
 	m := &sync.Mutex{}
 	MAX := 5
 	jps := NewJobPubSub()
+	jps.Timeout = 1005
 	var w sync.WaitGroup
 	w.Add(MAX)
 	for i := 1; i <= MAX; i++ {
