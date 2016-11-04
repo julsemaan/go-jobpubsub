@@ -20,7 +20,7 @@ func NewJobPubSub() *JobPubSub {
 	jps := &JobPubSub{}
 	jps.lock = &sync.Mutex{}
 	jps.pubSubMap = make(map[string]*pubsub.PubSub)
-	jps.Timeout = 1
+	jps.Timeout = 2000
 	return jps
 }
 
@@ -28,16 +28,24 @@ func NewJobPubSub() *JobPubSub {
 // It must be given an identifier of the job (the function) that is being executed
 // In the event a job is running with the same ID, it will subscribe to the return of that other job
 // The return value will be the same for any jobs running concurrently with the same ID
-// JobPubSub.Timeout can be used to specify a timeout (1 second by default, -1 to deactivate timeout)
+// JobPubSub.Timeout can be used to specify a timeout (2000 millisecond by default, -1 to deactivate timeout)
+// After the specified timeout, the job will be executed ignoring any published result (and its result will not be published).
 func (self *JobPubSub) Compute(id string, job func() interface{}) interface{} {
 
 	c := self.getSubChan(id)
+	timeoutChan := make(chan int)
+	if self.Timeout != -1 {
+		go func() {
+			time.Sleep(time.Duration(self.Timeout) * time.Millisecond)
+			timeoutChan <- 1
+		}()
+	}
 	// There is already someone taking care of it
 	if c != nil {
 		select {
 		case val := <-c:
 			return val
-		case <-time.After(time.Second * self.Timeout):
+		case <-timeoutChan:
 			fmt.Println("Timeout reading from pubsub channel...")
 			return job()
 		}
